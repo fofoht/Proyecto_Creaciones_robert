@@ -1,16 +1,21 @@
 #!/bin/bash
 
-echo "Setting Laravel public as root..."
+echo "Starting Laravel App on Azure..."
 
 cd /home/site/wwwroot
 
-# permissions
+# permisos críticos
 chmod -R 775 storage bootstrap/cache
 
-# optimize
+# limpiar caches (más seguro en deploy)
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+
+# volver a generar optimizado
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# start php-fpm
-php-fpm
+echo "Starting PHP-FPM..."
+exec php-fpm
